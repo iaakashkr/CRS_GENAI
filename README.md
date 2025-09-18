@@ -42,34 +42,7 @@ The pipeline is linear, simple, and easy to follow. Here’s the step-by-step wo
    - Logs all steps for auditing (`save_master_record`, `save_child_records`).
 
 ---
-CRS_GENAI/
-├── audit_logs/                     # Logs of executed pipelines
-├── auth/                           # Authentication utilities
-├── embeddings/                     # FAISS / pickle / few-shot embeddings
-├── pipeline/                       # Core pipeline
-│   ├── modules/                    # Pipeline modules (columns, intent, SQL, etc.)
-│   ├── prompts/                    # YAML prompt templates
-│   ├── pipeline.py                 # Main pipeline entrypoint
-│   └── load_references.py          # CSV loader
-├── query/                          # API / route handlers
-│   └── routes_new.py
-├── utils/                          # Utility scripts
-│   ├── audit.py
-│   ├── db_cred.py
-│   ├── db.py
-│   ├── dto.py
-│   ├── config.py
-│   └── Openapi_key_store.py
-├── data/                           # All CSVs and YAMLs
-│   ├── crs_columns.csv
-│   ├── crs_joining_instructions.csv
-│   ├── crs_metrics.csv
-│   ├── crs_tables.csv
-│   ├── fewshot_example.csv
-│   └── fewshots.yml
-├── app_new.py                       # Entrypoint for the app
-├── requirements.txt
-└── .env
+
 ---
 ## 📦 Key Features
 
