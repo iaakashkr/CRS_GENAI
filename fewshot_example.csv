@@ -1,0 +1,196 @@
+question,query
+What is the outstanding portfolio for branch IN0010097?,"SELECT a.branch_id, SUM(principal_outstanding) AS portfolio, b.zone_name, b.area_name
+        FROM accessdetails.__genai_portfolio_outstanding_1756049975215338_1756052875 a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id
+        WHERE a.branch_id = 'IN0010097'
+        GROUP BY a.branch_id, b.zone_name, b.area_name"
+How much was disbursed at branch IN0010002 by product and date?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, product, ln_value_date AS disbursement_date,
+                 SUM(amount) AS disbursed_amount,
+                 COUNT(DISTINCT loan_id) AS number_of_loans_disbursed
+          FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+          WHERE branch_id = 'IN0010002' 
+            AND ln_value_date IS NOT NULL 
+            AND ln_value_date <> ''
+          GROUP BY branch_id, product, ln_value_date
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+How many loans were disbursed at branch IN0010002 by product and date?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, product, ln_value_date AS disbursement_date,
+                 COUNT(DISTINCT loan_id) AS number_of_loans_disbursed
+          FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+          WHERE branch_id = 'IN0010002' 
+            AND ln_value_date IS NOT NULL 
+            AND ln_value_date <> ''
+          GROUP BY branch_id, product, ln_value_date
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+How many loans were closed at branch IN0010002 by product and date?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, product, loan_closed_date,
+                 COUNT(DISTINCT loan_id) AS number_of_closed_loans
+          FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+          WHERE branch_id = 'IN0010002' 
+            AND loan_closed_date IS NOT NULL 
+            AND loan_closed_date <> ''
+          GROUP BY branch_id, product, loan_closed_date
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+What is the total loan collection per branch?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, SUM(tot_principal_coll + tot_interest_coll) AS collection
+          FROM accessdetails.__genai_recovery_details_1756049922474528_1756052912237
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+What is the overdue amount per branch?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, SUM(overdue_principal + overdue_interest) AS overdue_amount
+          FROM accessdetails.__genai_arrear_details_1756049949594103_1756052901040
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+What is the overdue interest per branch?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, SUM(overdue_interest) AS overdue_interest
+          FROM accessdetails.__genai_arrear_details_1756049949594103_1756052901040
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+What are the min and max days in arrears per branch?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, MIN(days_in_arrear) AS min_dpd, MAX(days_in_arrear) AS max_dpd
+          FROM accessdetails.__genai_arrear_details_1756049949594103_1756052901040
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+What is the total PAR amount per branch?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, SUM(par_amount) AS total_par_amount
+          FROM accessdetails.__genai_arrear_details_1756049949594103_1756052901040
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+How many customers joined branch IN0010002 by activation date?,"SELECT branch_id, customer_activation_date,
+               COUNT(DISTINCT member_id) AS joined_member_count
+        FROM accessdetails.__genai_customer_details_1756049993575638_1756052886934
+        WHERE branch_id = 'IN0010002'
+          AND customer_activation_date IS NOT NULL
+          AND customer_activation_date <> ''
+        GROUP BY branch_id, customer_activation_date
+        ORDER BY customer_activation_date DESC"
+How many customers dropped out branch IN0010002 by dropout date?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id, dropout_date AS customer_dropout_date,
+                 COUNT(DISTINCT member_id) AS dropped_member_count
+          FROM accessdetails.__genai_customer_details_1756049993575638_1756052886934
+          WHERE branch_id = 'IN0010002'
+            AND record_type = 'DROPOUT'
+          GROUP BY branch_id, dropout_date
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+How many loans were preclosed at each branch and what is the total preclosed amount?,"SELECT a.*, b.*
+        FROM (
+          SELECT branch_id,
+                 COUNT(DISTINCT loan_id) AS number_of_preclosed_loans,
+                 SUM(principal_preclosure::NUMERIC + interest_preclosure::NUMERIC) AS total_preclosed_amounts
+          FROM accessdetails.__genai_preclosure_1756049872124225_1756105475
+          WHERE LOWER(preclose_flag) = 'yes'
+            AND preclosed_date IS NOT NULL
+            AND preclosed_date <> ''
+          GROUP BY branch_id
+        ) a
+        LEFT JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 b 
+          ON a.branch_id = b.branch_id"
+Zone-wise loan disbursement.,"SELECT T1.loan_id, T1.amount, T1.ln_value_date, T1.member_id, T2.zone_name
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS T1
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS T2 
+          ON T1.branch_id = T2.branch_id
+        LIMIT 100"
+Loan disbursement per state.,"SELECT SUM(ld.amount) AS total_disbursed, bm.state_name
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS ld
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS bm 
+          ON ld.branch_id = bm.branch_id
+        GROUP BY bm.state_name
+        ORDER BY total_disbursed DESC
+        LIMIT 100"
+Show me loan disbursement by area.,"SELECT T1.loan_id, T1.member_id, T1.amount, T1.ln_value_date, T2.area_name
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS T1
+        INNER JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS T2 
+          ON T1.branch_id = T2.branch_id
+        LIMIT 100"
+How much loan disbursed per funder?,"SELECT funder_id, SUM(amount) AS total_disbursed
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+        GROUP BY funder_id
+        ORDER BY total_disbursed DESC
+        LIMIT 100"
+Loan ID-wise disbursement.,"SELECT DISTINCT loan_id, amount, ln_value_date
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+        ORDER BY loan_id
+        LIMIT 100"
+Branch and zone-wise loan disbursement.,"SELECT T1.branch_id, T2.zone_name, T2.branch_name,
+               SUM(T1.amount) AS total_disbursement
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS T1
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS T2 
+          ON T1.branch_id = T2.branch_id
+        GROUP BY T1.branch_id, T2.zone_name, T2.branch_name
+        ORDER BY T1.branch_id
+        LIMIT 100"
+How many loans have been disbursed in total?,"SELECT COUNT(DISTINCT loan_id) AS total_loans
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+        LIMIT 100"
+Loans disbursed for customer ID = X.,"SELECT DISTINCT ld.loan_id, ld.amount, ld.ln_value_date
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS ld
+        JOIN accessdetails.__genai_customer_details_1756049993575638_1756052886934 AS cd 
+          ON ld.member_id = cd.member_id
+        WHERE cd.member_id = 'X'
+        LIMIT 100"
+Loan disbursement count by funder and zone.,"SELECT COUNT(DISTINCT ld.loan_id) AS loan_count, f.fund_name, bm.zone_name
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS ld
+        JOIN accessdetails.__genai_fund_1756049783884745_1756052932734 AS f 
+          ON ld.funder_id = f.funder_id
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS bm 
+          ON ld.branch_id = bm.branch_id
+        GROUP BY f.fund_name, bm.zone_name
+        ORDER BY loan_count DESC
+        LIMIT 100"
+Branch and state-wise loan disbursement count.,"SELECT COUNT(DISTINCT t1.member_id) AS customer_count, t2.state_name, t1.branch_id
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS t1
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS t2 
+          ON t1.branch_id = t2.branch_id
+        GROUP BY t2.state_name, t1.branch_id
+        ORDER BY t2.state_name, t1.branch_id
+        LIMIT 100"
+monthly distribution of disbursement amount and collection amount in karnatake in mysore branch?,"SELECT TO_CHAR(ld.ln_value_date::DATE, 'YYYY-MM') AS month,
+               SUM(ld.amount) AS total_disbursement_amount,
+               SUM(rd.tot_principal_coll + rd.tot_interest_coll) AS total_collection_amount
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654 AS ld
+        JOIN accessdetails.__genai_branch_master_1756049768773113_1756052942850 AS bm 
+          ON ld.branch_id = bm.branch_id
+        JOIN accessdetails.__genai_recovery_details_1756049922474528_1756052912237 AS rd 
+          ON ld.member_id = rd.member_id AND ld.branch_id = rd.branch_id
+        WHERE UPPER(bm.state_name) = UPPER('KARNATAKA')
+          AND UPPER(bm.branch_name) LIKE UPPER('%mysore%')
+        GROUP BY month
+        ORDER BY month
+        LIMIT 100"
+month wise disbursement amount and count for product GL.IGL.PRAGATI.PLUS?,"SELECT TO_CHAR(ln_value_date::DATE, 'YYYY-MM') AS disbursement_month,
+               SUM(amount) AS total_disbursement_amount,
+               COUNT(DISTINCT loan_id) AS disbursement_count
+        FROM accessdetails.__genai_loans_disbursement_1756049896399611_1756121654
+        WHERE UPPER(product) = UPPER('GL.IGL.PRAGATI.PLUS')
+        GROUP BY disbursement_month
+        ORDER BY disbursement_month
+        LIMIT 100"
