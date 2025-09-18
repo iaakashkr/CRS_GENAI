@@ -40,33 +40,37 @@ The pipeline is linear, simple, and easy to follow. Here’s the step-by-step wo
 8. **Return Results**
    - Converts the DTO to a dictionary and returns it to the user/UI.
    - Logs all steps for auditing (`save_master_record`, `save_child_records`).
-
+---
+🗂️ Folder Structure
 CRS_GENAI/
 ├── audit_logs/                     # Logs of executed pipelines
 ├── auth/                           # Authentication utilities
-├── embeddings/                     # FAISS / pickle / few-shot embeddings
-├── pipeline/                       # Core pipeline
-│   ├── modules/                    # Pipeline modules (columns, intent, SQL, etc.)
-│   ├── prompts/                    # YAML prompt templates
-│   ├── pipeline.py                 # Main pipeline entrypoint
-│   └── load_references.py          # CSV loader
-├── query/                          # API / route handlers
-│   └── routes_new.py
-├── utils/                          # Utility scripts
+├── embeddings/                     # Few-shot FAISS embeddings and pickle models
+├── pipeline/
+│   ├── modules/                    # Pipeline modules (rephrase, intent, columns, sql_generator, validation)
+│   ├── prompts/                    # Prompt templates (YAML)
+│   ├── pipeline.py                 # Main pipeline entry
+│   ├── load_references.py          # Loads CSV references
+│   └── __pycache__/
+├── query/
+│   ├── routes_new.py               # API / query routes
+│   └── __pycache__/
+├── utils/
 │   ├── audit.py
 │   ├── db_cred.py
 │   ├── db.py
 │   ├── dto.py
 │   ├── config.py
-│   └── Openapi_key_store.py
-├── data/                           # All CSVs and YAMLs
-│   ├── crs_columns.csv
-│   ├── crs_joining_instructions.csv
-│   ├── crs_metrics.csv
-│   ├── crs_tables.csv
-│   ├── fewshot_example.csv
-│   └── fewshots.yml
-├── app_new.py                       # Entrypoint for the app
+│   └── __pycache__/
+├── app_new.py
+├── crs_columns.csv
+├── crs_joining_instructions.csv
+├── crs_metrics.csv
+├── crs_tables.csv
+├── fewshot_example.csv
+├── fewshot_example_9-9-25.csv
+├── fewshots.yml
+├── Openapi_key_store.py
 ├── requirements.txt
 └── .env
 
