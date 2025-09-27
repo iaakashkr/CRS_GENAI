@@ -4,7 +4,7 @@ CRS_GENAI is a lightweight, modular data query pipeline that converts user quest
 
 ---
 
-## 🚀 How It Works
+## 🚀 How It Works_
 
 The pipeline is linear, simple, and easy to follow. Here’s the step-by-step workflow:
 
