@@ -66,17 +66,54 @@ Think of the pipeline like **ordering a pizza**:
 
 ---
 
-## ⚡ Usage
+## ⚡ Setup & Usage
 
-```python
-from pipeline.pipeline import run_pipeline
+### 1. Installation & Environment Setup
+Ensure you have Conda installed, then set up the environment:
+```powershell
+# Activate the conda environment
+conda activate myenv
 
-question = "Portfolio outstanding for branch IN0010097?"
-result = run_pipeline(question, username="akash")
-print(result)
+# Install requirements
+pip install -r requirements.txt
+```
 
-🛡️ License
-© 2025 Akash. All Rights Reserved.
+### 2. Configuration (.env)
+Create a `.env` file in the root directory:
+```env
+GEMINI_API_KEY="your-gemini-api-key"
+DATABASE_URL="postgresql://postgres:[password]@db.[project-id].supabase.co:5432/postgres"
+```
 
-CRS_GENAI and all its contents—including code, data, modules, and documentation—are proprietary. Unauthorized copying, modification, redistribution, or use for commercial purposes is strictly prohibited without explicit written permission from the author.
-You may view and use this repository for personal, non-commercial purposes only. Any other use requires prior consent from the copyright holder.
+### 3. Running the CLI Developer Tool (ask.py)
+To query the database directly in natural language from the command line:
+```powershell
+python ask.py "What is the overdue amount per branch?"
+```
+
+### 4. Running the Flask API Server
+To start the backend web server:
+```powershell
+python app_new.py
+```
+By default, the server runs on `http://127.0.0.1:5000/`.
+
+* **To Login (Retrieve JWT Token)**: Send a `POST` request to `http://127.0.0.1:5000/auth/login` with body:
+  ```json
+  {
+    "username": "admin",
+    "password": "admin123"
+  }
+  ```
+* **To Query via API**: Send a `POST` request to `http://127.0.0.1:5000/user/query` with your JWT Bearer token and body:
+  ```json
+  {
+    "question": "Portfolio outstanding for branch B001?"
+  }
+  ```
+
+---
+
+## 🛡️ License
+
+Distributed under the MIT License. See `LICENSE` for more information.
