@@ -12,7 +12,7 @@ from pipeline.modules.load_references import load_references
 metrics_reference, columns_reference, tables_reference = load_references()
 
 
-def identify_intent(rephrased_question, tables_reference, model="gemini-1.5-flash"):
+def identify_intent(rephrased_question, tables_reference, model="gemini-flash-latest"):
     """
     Identify the intent, metrics, keywords, locations, and time frame from a user question
     using the Gemini model and the YAML-based prompt template.
@@ -22,7 +22,7 @@ def identify_intent(rephrased_question, tables_reference, model="gemini-1.5-flas
     full_prompt = load_prompt(
         "intent.yml",
         rephrased_question=rephrased_question,
-        tables_reference=tables_reference,
+        tables_reference=tables_reference.to_csv(index=False),
         current_date_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     )
 

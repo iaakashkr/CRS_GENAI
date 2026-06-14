@@ -9,13 +9,13 @@ from .prompt_loader import load_prompt
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def generate_sql_from_dto(dto, model="gemini-1.5-flash", top_k=2, faiss_index=None, examples_df=None, embedder=None, bm25_model=None, tokenized_corpus=None):
+def generate_sql_from_dto(dto, model="gemini-flash-latest", top_k=2, faiss_index=None, examples_df=None, embedder=None, bm25_model=None, tokenized_corpus=None):
     """
     Generate SQL query from DTO using LLM, injecting few-shot examples directly from DTO.
     Stores few-shot examples and matched indices in the DTO.
     """
 
-    logger.info("🚀 Starting SQL generation from DTO...")
+    logger.info("[SQL Generator] Starting SQL generation from DTO...")
 
     # ---------------- Step 0.5: Quote table names safely ----------------
     quoted_tables = []
@@ -70,6 +70,6 @@ def generate_sql_from_dto(dto, model="gemini-1.5-flash", top_k=2, faiss_index=No
     # ---------------- Step 5: Update DTO ----------------
     dto.sql_query = sql_query
     dto.sql_usage = sql_usage
-    logger.info("✅ DTO Updated with SQL Query, Usage, and Few-Shot info")
+    logger.info("[SQL Generator] DTO Updated with SQL Query, Usage, and Few-Shot info")
 
     return dto

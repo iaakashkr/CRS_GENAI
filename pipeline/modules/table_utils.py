@@ -31,11 +31,11 @@ def correct_tables_and_columns(tables, columns, tables_reference):
     # Step 2: Only keep valid tables
     final_tables = [t for t in corrected_tables if t in valid_tables]
 
-    # Step 3: Remap columns to corrected table names
     corrected_columns = {}
     for old_table, cols in columns.items():
         new_table = corrections.get(old_table, old_table)
-        corrected_columns[new_table] = cols
+        if new_table in final_tables:
+            corrected_columns[new_table] = cols
 
     # Step 4: Validate tables and columns (quotes etc.)
     final_tables, final_columns = validate_tables_and_columns(final_tables, corrected_columns)

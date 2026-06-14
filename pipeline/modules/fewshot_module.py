@@ -130,21 +130,21 @@ def fetch_few_shots(
         "matched_indices": matched_indices
     }
 
-# ----------------- Initialize FAISS and BM25 -----------------
-def init_index_and_bm25(examples_df: pd.DataFrame, embedder: Embedder):
-    """
-    Create FAISS index and BM25 model from few-shot examples
-    """
-    # --- FAISS ---
-    # embeddings = np.array([embedder.embed(q) for q in examples_df["question"]], dtype="float32")
-    embeddings = np.array([embedder.embed(normalize(q)) for q in examples_df["question"]], dtype="float32")
+# # ----------------- Initialize FAISS and BM25 -----------------
+# def init_index_and_bm25(examples_df: pd.DataFrame, embedder: Embedder):
+#     """
+#     Create FAISS index and BM25 model from few-shot examples
+#     """
+#     # --- FAISS ---
+#     # embeddings = np.array([embedder.embed(q) for q in examples_df["question"]], dtype="float32")
+#     embeddings = np.array([embedder.embed(normalize(q)) for q in examples_df["question"]], dtype="float32")
 
-    faiss.normalize_L2(embeddings)
-    faiss_index = faiss.IndexFlatIP(embeddings.shape[1])
-    faiss_index.add(embeddings)
+#     faiss.normalize_L2(embeddings)
+#     faiss_index = faiss.IndexFlatIP(embeddings.shape[1])
+#     faiss_index.add(embeddings)
 
-    # --- BM25 ---
-    tokenized_corpus = [q.split(" ") for q in examples_df["question"]]
-    bm25_model = BM25Okapi(tokenized_corpus)
+#     # --- BM25 ---
+#     tokenized_corpus = [q.split(" ") for q in examples_df["question"]]
+#     bm25_model = BM25Okapi(tokenized_corpus)
 
-    return faiss_index, tokenized_corpus, bm25_model
+#     return faiss_index, tokenized_corpus, bm25_model
